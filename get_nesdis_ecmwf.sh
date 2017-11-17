@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# update local archive of ECMWF files being created for JPSS-1
+# pulls from nesdis ftp site
+
+# nesdis ftp site maintains a rolling 5-day window of files. When 'n'
+# new files come online, 'n' oldest are gone.
+
+# This script implements a rudimentary rsync-over-ftp type behavior where it
+# checks the local archive and compares against the ftp archive to pull down only
+# those files not currently on the local machine.
+
+# REQUIRES: lftp, awk, diff
+
+# make sure we are at the root of the local archive
+cd /asl/s1/NESDIS_ECMWF
+
+# build the local archive file listing
+find . -name 'UAD*' > spud.list
+
+# build the current remote file listing
+lftp -e 'find;bye' ftp://ftp.star.nesdis.noaa.gov/pub/smcd/spb/ychen/ECMWF_data/ecmwf | \
+   grep UAD > nesdis.list
+
+# compare the two lists, collect missing files, and build lftp driver file
+diff nesdis.list spud.list | \
+   awk 'BEGIN{\
+              printf("open ftp://ftp.star.nesdis.noaa.gov\n"); \
+              printf("cd pub/smcd/spb/ychen/ECMWF_data/ecmwf/\n"); } \
+        /^</ { printf("get %s -o %s\n",$2,$2); } \
+        END  { printf("bye\n"); }' > lftp.driver
+
+# execute lftp with lftp.driver to download missing files
+lftp -f lftp.driver
+
+
+
