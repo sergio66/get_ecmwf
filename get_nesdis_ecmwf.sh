@@ -12,6 +12,9 @@
 
 # REQUIRES: lftp, awk, diff
 
+# direct path to lftp (lftp not getting picked up by path under cron)
+LFTP="/usr/local/bin/lftp"
+
 # make sure we are at the root of the local archive
 cd /asl/s1/NESDIS_ECMWF
 
@@ -19,7 +22,7 @@ cd /asl/s1/NESDIS_ECMWF
 find . -name 'UAD*' > spud.list
 
 # build the current remote file listing
-lftp -e 'find;bye' ftp://ftp.star.nesdis.noaa.gov/pub/smcd/spb/ychen/ECMWF_data/ecmwf | \
+$LFTP -e 'find;bye' ftp://ftp.star.nesdis.noaa.gov/pub/smcd/spb/ychen/ECMWF_data/ecmwf | \
    grep UAD > nesdis.list
 
 # compare the two lists, collect missing files, and build lftp driver file
@@ -30,8 +33,11 @@ diff nesdis.list spud.list | \
         /^</ { printf("get %s -o %s\n",$2,$2); } \
         END  { printf("bye\n"); }' > lftp.driver
 
+# make incoming year/month directories, if not currently extant
+grep .gz lftp.driver | cut -d" " -f4 | cut -d\/ -f1-3 | sort | uniq | xargs mkdir -p
+
 # execute lftp with lftp.driver to download missing files
-lftp -f lftp.driver
+$LFTP -f lftp.driver
 
 
 
