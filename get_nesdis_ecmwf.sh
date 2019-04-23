@@ -12,7 +12,11 @@
 
 # REQUIRES: lftp, awk, diff
 
-# direct path to lftp (lftp not getting picked up by path under cron)
+# Send start of transfer heartbeat to SLB
+CONTACT="4136879102@tmomail.net"
+BODY="ECMWF/SPUD xfer start"
+echo "$BODY" | mail -s "$BODY" "$CONTACT"
+
 LFTP="/usr/local/bin/lftp"
 
 # make sure we are at the root of the local archive
@@ -39,5 +43,9 @@ grep .gz lftp.driver | cut -d" " -f4 | cut -d\/ -f1-3 | sort | uniq | xargs mkdi
 # execute lftp with lftp.driver to download missing files
 $LFTP -f lftp.driver
 
+# Send end of transfer heartbeat to SLB
+CONTACT="4136879102@tmomail.net"
+BODY="ECMWF/SPUD xfer end"
+echo "$BODY" | mail -s "$BODY" "$CONTACT"
 
 
