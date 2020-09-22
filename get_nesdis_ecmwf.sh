@@ -17,10 +17,13 @@ CONTACT="4136879102@tmomail.net"
 BODY="ECMWF/SPUD xfer start"
 echo "$BODY" | mail -s "$BODY" "$CONTACT"
 
-LFTP="/usr/local/bin/lftp"
+LFTP="/usr/bin/lftp"
 
 # make sure we are at the root of the local archive
-cd /asl/s1/NESDIS_ECMWF
+# cd /asl/s1/NESDIS_ECMWF
+# cd /Volumes/ExtBackup-6TB/NESDIS_ECMWF
+# cd /Volumes/ExtBackup-8TB/NESDIS_ECMWF
+cd /asl/models/ecmwf
 
 # build the local archive file listing
 find . -name 'UAD*' > spud.list
