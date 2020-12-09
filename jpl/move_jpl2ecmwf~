@@ -1,0 +1,115 @@
+#!/bin/sh
+#
+# useage:    rename_jpl2ecmwf <jpl_filename(s)>
+#
+# Renames a JPL ECMWF file back into the original ECMWF filename
+#
+
+# Created by Scott Hannon, 21 January 2005
+# Update: 1 July 2005, Scott Hannon - more robust testing of JPL filename
+###############################################################################
+
+# JPL ECMWF files are named like
+# ECMWF.2017.04.29.T03Z.uad_HGrbF03.A17207193054
+
+# Removing isinteger tests and relying on naming consistency
+
+for JPLFILE in $*
+do
+
+NCHAR=`echo $JPLFILE | wc -c`
+# note: "echo $X | wc -c" adds 1 to the number of characters actually in $X
+if (test $NCHAR -lt 47)
+then
+echo $NCHAR
+   echo 'Unexpected JPL filename: not in expected format'
+   exit 1
+fi
+
+# Break up JPL filename into consituent pieces
+
+ECMWF=`echo $JPLFILE | cut -c1-5`
+if (test $ECMWF != 'ECMWF')
+then
+   echo 'Unexpected JPL filename: filename prefix is not ECMWF'
+   exit 1
+fi
+
+YEAR=`echo $JPLFILE | cut -c7-10`
+# if (! isinteger $YEAR)
+# then
+#    echo 'Unexpected JPL filename: bad year string'
+#    exit 1
+# fi
+
+MONTH=`echo $JPLFILE | cut -c12-13`
+# if (! isinteger $MONTH)
+# then
+#    echo 'Unexpected JPL filename: bad month string'
+#    exit 1
+# fi
+
+DAY=`echo $JPLFILE | cut -c15-16`
+# if (! isinteger $DAY)
+# then
+#    echo 'Unexpected JPL filename: bad day string'
+#    exit 1
+# fi
+
+HOUR=`echo $JPLFILE | cut -c19-20`
+# if (! isinteger $HOUR)
+# then
+#    echo 'Unexpected JPL filename: bad hour string'
+#    exit 1
+# fi
+
+
+# Check for gzip compression
+C1=`expr $NCHAR - 3`
+C2=`expr $NCHAR - 1`
+CUTSTR='-c'$C1'-'$C2
+TAIL3=`echo $JPLFILE | cut $CUTSTR`
+# if (isinteger $TAIL3)
+# then
+#    SUFFIX=''
+# else
+#    if (test $TAIL3 = '.gz')
+#    then
+#       SUFFIX='.gz'
+#    else
+# echo '<'$TAIL3'>'
+#       echo 'Unexpected JPL filename: unexpected filename suffix'
+#       exit 1
+#    fi
+# fi
+SUFFIX=''
+
+MD=${MONTH}${DAY}
+case $HOUR in
+      00|06|12|18) MIDDLE=${MD}${HOUR}'00'${MD}${HOUR}'00'  ;;
+      03|09) MIDDLE=${MD}'0000'${MD}${HOUR}'00'  ;;
+      15|21) MIDDLE=${MD}'1200'${MD}${HOUR}'00'  ;;
+esac
+
+OUTFILE="/asl/data/ecmwf/$YEAR/$MONTH/UAD"${MIDDLE}'1'${SUFFIX}
+
+echo moving ${JPLFILE} to ${OUTFILE}
+cp -n ${JPLFILE} ${OUTFILE}
+
+#%%%
+#          1         2         3         4
+# 1234567890123456789012345678901234567890123456
+# ECMWF.2005.01.15.T00Z.uad_HGrbF00.A05018061330
+# UAD01160000011600001.gz
+# UAD01160000011603001.gz
+# UAD01160000011609001.gz
+# UAD01160600011606001.gz
+# UAD01161200011612001.gz
+# UAD01161200011615001.gz
+# UAD01161200011621001.gz
+# UAD01161800011618001.gz
+#%%%
+
+done
+
+### end of script ###
