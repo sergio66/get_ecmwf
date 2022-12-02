@@ -21,9 +21,9 @@ for year in $(seq -w $STARTYEAR $ENDYEAR); do
 	LASTDAY=$(date -d "$year/$month/01 + 1 month - 1 day" +"%d")
 
 	for day in $(seq -w 1 $LASTDAY); do
-	    fileglob=UAD${month}${day}*-1.nc
+	    fileglob="\.\/UAD${month}${day}*-1.nc"
 
-	    nfiles=$(ls $fileglob 2> /dev/null | wc -l)
+	    nfiles=$(find . -type f -regextype posix-basic -regex "$fileglob" 2> /dev/null | wc -l)
 	    if [[ $nfiles != 8 ]]; then 
 		echo "$year/$month/$day" 
 	    fi
