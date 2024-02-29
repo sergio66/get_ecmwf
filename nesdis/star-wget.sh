@@ -37,12 +37,17 @@ PART2=(0000 0300 0900 0600 1200 1500 2100 1800)
 # The STAR archive lags by one day and sometimes misses a few files
 # that get filled in a day or two later. Look for files in a window of
 # one week prior to today
-start=$(date -d "today - 7 days" +%"j")
+YYYY=$(date -d "today" +"%Y")
+start=$(date -d "today - 4 days" +"%j")
 end=$(date -d "today" +"%j")
+if [ $end -lt $start ]; then
+    end=$(date -d "today - $end days" +"%j")
+    echo "> Bridging year boundary"
+    echo ">> starting with year $((YYYY--))"
+fi
 echo "> Retrieval window: $start - $end"
 
 for doy in $(seq -f "%03g" $start $end); do
-    YYYY=2022
     MMDD=$(date -d "$YYYY-01-01 -1 day + $doy days" +"%m%d")
     MM=${MMDD:0:2}
     for i in {0..7}; do
