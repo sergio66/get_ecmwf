@@ -38,7 +38,7 @@ PART2=(0000 0300 0900 0600 1200 1500 2100 1800)
 # that get filled in a day or two later. Look for files in a window of
 # one week prior to today
 YYYY=$(date -d "today" +"%Y")
-start=$(date -d "today - 4 days" +"%j")
+start=$(date -d "today - 30 days" +"%j")
 end=$(date -d "today" +"%j")
 if [ $end -lt $start ]; then
     end=$(date -d "today - $end days" +"%j")
