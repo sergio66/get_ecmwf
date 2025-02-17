@@ -1,0 +1,80 @@
+* JPL
+ECMWF files pulled from JPL have a different file naming convention
+than those pulled from ECMWF through NOAA STAR.
+
+ - JPL :: ECMWF.2005.01.15.T00Z.uad_HGrbF00.A05018061330
+ - ECMWF :: UAD01160000011600001
+
+The script in ./jpl/move_jpl2ecmwf performs this renaming
+
+* NOAA STAR
+We have, for some, time been getting ECMWF files from someone at
+NOAA. My understanding is this data is being made available for more
+than just us but it could likely disappear at any time. The current
+version of the archive for we pull from is the webpage:
+https://www.star.nesdis.noaa.gov/data/ecmwf.
+
+This webpage has a rolling collection of ECMWF daily files
+(8/day). The original setup was to keep a rolling 2-3 week window
+available. I believe that is still the definition on paper but the
+actual archive presently goes back several months. In practice, this
+means that downloads don't need to be run daily but should be run at
+least weekly. We often see dropouts in data, especially around
+holidays. I suspect that this feed is not fully automated and
+fault-tolerant on the NOAA side. These dropouts tend to be a couple
+days but have been as long as 10-14 days and it takes a a few days for
+the archive to fully catch up once data starts flowing again. Long
+dropouts should be addressed with whomever is providing the feed at
+NOAA.
+
+The pulling of data is simple: 
+
+./nesdis/star-wget.sh
+
+This script defaults to trying to pull files from the website mentioed
+above starting "today" and going back through a 10 day window. It
+builds an ECMWF filename and checks to see if we have already pulled
+that file down. if we have it already, the script moves on to the
+next. Files not present in our archive are downloaded (in form
+UAD01160000011600001.gz)
+
+In the event that gaps need to be filled, the script's epoch and
+window size can be adjusted:
+
+./nesdis/star-wget.sh [-D YYYYMMDD] [-W N]
+
+where -D changes the date at the near end of the download window and
+-W changes the window width in days
+
+i.e.
+star-wget.sh    - searches for files from today-10 days up through today
+
+star-wget.sh -D 20241203 - searches for files 20241203 - 10 days up
+through 20241203
+
+star-wget.sh -W 15  - searches for files today - 15 days up though today
+
+star-wget.sh -D 20241104 -W 5 - searches for files 20241104 - 5 days
+up through 20241104
+
+
+*NOTE* ECMWF filenames have no YEAR encoded in them. Makes it very
+easy to makes mistakes across year boundaries when dealing strictly
+with filenames. Complete date information is (obviously) within the
+files but this is not easily readable in the source GRIB format. This
+may be especially important to recognize if moving large chunks of the
+local archive for diskspace reasons.
+
+Files downloaded are placed in their appropriate
+/asl/models/ecmwf/YYYY/MM directories according to the year the script
+says it is working on. The script does not check GRIB file contents
+for confirmation but, even the currently multi-month NESDIS archive
+makes these assumptions relatively safe on the download side of
+things. Making local archive changes after that, one must pay attention.
+
+* Converting GRIB to netcdf
+
+
+
+
+

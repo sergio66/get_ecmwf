@@ -37,11 +37,27 @@ PART2=(0000 0300 0900 0600 1200 1500 2100 1800)
 # The STAR archive lags by one day and sometimes misses a few files
 # that get filled in a day or two later. Look for files in a window of
 # one week prior to today
-YYYY=$(date -d "today" +"%Y")
-start=$(date -d "today - 30 days" +"%j")
-end=$(date -d "today" +"%j")
+edate="today"
+window=10
+while getopts "D:W:" flag; do
+case "$flag" in
+    D) # date
+	    edate=$OPTARG
+            ;;
+    W) # download window (before today or specified date)
+	    window=$OPTARG
+            ;;
+esac
+done
+
+# make the year/month position paramters available
+shift $(($OPTIND - 1))
+
+YYYY=$(date -d "$edate" +"%Y")
+start=$(date -d "$edate - $window days" +"%j")
+end=$(date -d "$edate" +"%j")
 if [ $end -lt $start ]; then
-    end=$(date -d "today - $end days" +"%j")
+    end=$(date -d "$edate - $end days" +"%j")
     echo "> Bridging year boundary"
     echo ">> starting with year $((YYYY--))"
 fi
