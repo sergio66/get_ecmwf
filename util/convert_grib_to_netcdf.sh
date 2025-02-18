@@ -11,9 +11,10 @@
 
 # adjust library paths to correct problem with libhdf 
 #         **consider this a temporary kludge**
-export LD_LIBRARY_PATH="/usr/ebuild/ebuild/software/HDF5/1.10.2-foss-2018b/lib/":$LD_LIBRARY_PATH
+#export LD_LIBRARY_PATH="/usr/ebuild/ebuild/software/HDF5/1.10.2-foss-2018b/lib/":$LD_LIBRARY_PATH
 
 GRIBBIN=~/git/eccodes-2.18.0/bin
+#GRIBBIN=~/git/get_ecmwf/util
 
 # check to see if input file is gzipped (assumes files conform to UAD*.gz naming)
 if [[ $1 =~ \.gz$ || -f ${1}.gz ]]; then
