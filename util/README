@@ -1,0 +1,61 @@
+* Convert grib to netcdf
+ECMWF GRIB files are converted to netcdf for local use with the script
+convert_grib_to_netcdf.
+
+This script takes on a single ECMWF UAD*.gz (or its unzipped version)
+and breaks surface and level data out into component files. From a
+typical fresh download, we get a file named like UAD02041200020415001.gz.
+
+$PATH_TO_THIS_REPO/util/convert_grib_to_netcdf.sh UAD02041200020415001.gz
+
+ - first unzips the grib file to UAD02041200020415001
+ - then breaks the files out into three component files based on grib
+   typeOfLevel (surface, hybrid, depthBelowLandLayer)
+   - surface :: UAD02041200020415001-1.nc
+   - hybrid :: UAD02041200020415001-2.nc
+   - depth... :: UAD02041200020415001-d.nc
+
+To convert multiple files, simply run this in a bash loop:
+
+for file in UAD*.gz; do
+   $PATH_TO_THIS_REPO/util/convert_grib_to_netcdf.sh $file
+done
+
+To save diskspace afterwards, one can delete the UAD*.gz and its
+associated UAD* unzipped file and just leave behind the UAD*-[12d].nc
+files (which can also be compressed with nccopy from the netCDF module)
+
+** grib_copy and grib_to_netcdf
+These programs come from the ECMWF eccodes software package which is
+not globally maintained on the cluster. This repo contains older,
+precompiled versions for convenience. This convenience comes at the
+cost of needing to load an older HDF5 module prior to use so that
+grib_to_netcdf can find the shared library libhdf5.so.101.
+
+User is expected to set up their module environment to be able to
+switch to the module HDF5/1.10.2-intel-2018b or older in order to run
+this script (and then be able to switch back to a newer version as
+needed for whatever else they do).
+
+*NOTE* :: The path associated with the variable GRIBBIN will need to
+be edited to match the path user clones this repo into (or user can
+clone into ~/git/get_ecmwf and use the script as-is).
+
+*FURTHER NOTE* The most recent module with libhdf5.so.101 is already
+reaching the bottom of the HDF5 module list. Relying on its continued
+existence may not be the best plan going forward. See next section for
+solution:
+
+* Future proof grib_to_netcdf and libhdf
+ - Read https://confluence.ecmwf.int/display/ECC
+ - download latest eccodes tarball from
+   https://confluence.ecmwf.int/display/ECC/Releases
+ - set up your default/preferred module environment
+ - follow make and install instructions (requires loading cmake
+   module) to make and install eccodes locally
+ - edit GRIBBIN path in convert_grib_to_netcdf to point to the eccodes
+   installed bin directory which has grib_copy and grib_to_netcdf
+
+Now, you should be able to run convert_grib_to_netcdf without having
+to remember to restore altered module settings and then re-restore
+unaltered settings for normal use.

@@ -9,12 +9,11 @@
 # processing although, there is no reason this routine should fail if
 # a full list of product files already exists
 
-# adjust library paths to correct problem with libhdf 
-#         **consider this a temporary kludge**
-#export LD_LIBRARY_PATH="/usr/ebuild/ebuild/software/HDF5/1.10.2-foss-2018b/lib/":$LD_LIBRARY_PATH
-
-GRIBBIN=~/git/eccodes-2.18.0/bin
-#GRIBBIN=~/git/get_ecmwf/util
+# GRIBBIN points to the executables for grib_copy and
+# grib_to_netcdf. Older versions of these programs are included in the
+# util directory but their use requires module loading an older
+# version of the HDF5 libraries (see ./README and ./util/README for details). 
+GRIBBIN=~/git/get_ecmwf/util
 
 # check to see if input file is gzipped (assumes files conform to UAD*.gz naming)
 if [[ $1 =~ \.gz$ || -f ${1}.gz ]]; then

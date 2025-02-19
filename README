@@ -72,8 +72,10 @@ for confirmation but, even the currently multi-month NESDIS archive
 makes these assumptions relatively safe on the download side of
 things. Making local archive changes after that, one must pay attention.
 
-* Converting GRIB to netcdf
-
+* Converting GRIB to netcdf 
+GRIB files are broken out and converted to netcdf with the
+convert_grib_to_netcdf script found in the util directory. The script,
+helper programs, and README will all be found there.
 
 
 
