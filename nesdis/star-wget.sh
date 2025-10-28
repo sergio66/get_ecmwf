@@ -27,7 +27,8 @@
 URL="https://www.star.nesdis.noaa.gov/data/ecmwf"
 USERNAME=ecmwf
 PASSWD=STARvalsthecals
-DDIR=/asl/models/ecmwf/
+#DDIR=/asl/models/ecmwf/
+DDIR=/home/sergio/asl/isilonX/ecmwf
 
 # to get this banged out, let's just define two arrays each holding 8
 # elements; one will hold the first part of the doublet, the other the second

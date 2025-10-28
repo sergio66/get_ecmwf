@@ -1,0 +1,18 @@
+Feb 2025 : cloned from
+sergio@c24-52 get_ecmwf]$ git remote --v
+origin	git@github.com:sbuczkowski/get_ecmwf.git (fetch)
+origin	git@github.com:sbuczkowski/get_ecmwf.git (push)
+
+Neded to add in chip irectives, and my modifications so 10/28/2025 created a repo on
+https://github.com/sergio66/get_ecmwf
+
+[sergio@c24-52 get_ecmwf]$ git remote add github git@github.com:sergio66/get_ecmwf.git
+[sergio@c24-52 get_ecmwf]$ git remote --v
+github	git@github.com:sergio66/get_ecmwf.git (fetch)
+github	git@github.com:sergio66/get_ecmwf.git (push)
+origin	git@github.com:sbuczkowski/get_ecmwf.git (fetch)
+origin	git@github.com:sbuczkowski/get_ecmwf.git (push)
+
+
+git add nesdis/star-wget.sh util/convert_grib_to_netcdf.sh ReadmeSergio
+git push github

@@ -13,7 +13,9 @@
 # grib_to_netcdf. Older versions of these programs are included in the
 # util directory but their use requires module loading an older
 # version of the HDF5 libraries (see ./README and ./util/README for details). 
-GRIBBIN=~/git/get_ecmwf/util
+# GRIBBIN=~/git/get_ecmwf/util
+# GRIBBIN=/home/sergio/MATLABCODE/matlib/get_ecmwf/util
+GRIBBIN=/home/sergio/git/get_ecmwf/util
 
 # check to see if input file is gzipped (assumes files conform to UAD*.gz naming)
 if [[ $1 =~ \.gz$ || -f ${1}.gz ]]; then
