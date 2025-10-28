@@ -13,6 +13,28 @@ github	git@github.com:sergio66/get_ecmwf.git (push)
 origin	git@github.com:sbuczkowski/get_ecmwf.git (fetch)
 origin	git@github.com:sbuczkowski/get_ecmwf.git (push)
 
+>>>
 
 git add nesdis/star-wget.sh util/convert_grib_to_netcdf.sh ReadmeSergio
 git push github
+
+>>>
+
+[sergio@c24-52 get_ecmwf]$ git commit -m "SSM : first push to my github repo"
+[main 1dddf86] SSM : first push to my github repo
+ 3 files changed, 23 insertions(+), 2 deletions(-)
+ create mode 100644 ReadmeSergio
+[sergio@c24-52 get_ecmwf]$ git push github
+X11 forwarding request failed on channel 0
+Enumerating objects: 12, done.
+Counting objects: 100% (12/12), done.
+Delta compression using up to 64 threads
+Compressing objects: 100% (6/6), done.
+Writing objects: 100% (7/7), 1003 bytes | 334.00 KiB/s, done.
+Total 7 (delta 3), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (3/3), completed with 3 local objects.
+To github.com:sergio66/get_ecmwf.git
+   34a3f55..1dddf86  main -> main
+
+>>>
+git remote remove origin
